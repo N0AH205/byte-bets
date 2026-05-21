@@ -7,7 +7,7 @@ import { mainnet, sepolia } from 'wagmi/chains'; // sepolia is the testnet we wi
 
 // 1. Get a free projectId at https://cloud.walletconnect.com
 // For now, you can leave this generic one for testing, but swap it before launch!
-const projectId = 'b56e18d47c72ab683b108151966d6bea';
+const projectId = process.env.NEXT_PUBLIC_W3M_PROJECT_ID || 'b56e18d47c72ab683b108151966d6bea';
 
 // 2. Set up the metadata for when users connect
 const metadata = {
