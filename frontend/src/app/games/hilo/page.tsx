@@ -65,7 +65,7 @@ export default function HiLoGame() {
   const [gameState, setGameState] = useState<GameState>("idle");
   const [streak, setStreak] = useState<number>(0);
   const [totalMultiplier, setTotalMultiplier] = useState<number>(1.0);
-  const [pendingPrediction, setPendingPrediction] = useState<Prediction>(null);
+  const [, setPendingPrediction] = useState<Prediction>(null);
   const [lastResult, setLastResult] = useState<{ won: boolean; multiplier: number } | null>(null);
 
   const startGame = useCallback(() => {
@@ -146,7 +146,6 @@ export default function HiLoGame() {
     </div>
   );
 
-  const rankName = (v: number) => RANKS[v - 1];
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">

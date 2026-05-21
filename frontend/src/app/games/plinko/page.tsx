@@ -130,10 +130,8 @@ export default function PlinkoGame() {
         const ball = bodyA.label === "ball" ? bodyA : bodyB.label === "ball" ? bodyB : null;
         const bin = bodyA.label.startsWith("bin-") ? bodyA : bodyB.label.startsWith("bin-") ? bodyB : null;
 
-        // @ts-ignore
-        if (ball && bin && !ball.isScored) {
-          // @ts-ignore
-          ball.isScored = true;
+        if (ball && bin && !(ball as Matter.Body & { isScored?: boolean }).isScored) {
+          (ball as Matter.Body & { isScored?: boolean }).isScored = true;
           Matter.Composite.remove(engine.world, ball);
           const binIndex = parseInt(bin.label.split("-")[1]);
           const mults = MULTIPLIER_TABLES[riskLevel][rows];

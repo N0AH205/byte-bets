@@ -25,7 +25,7 @@ export default function CrashGame() {
   const [autoCashout, setAutoCashout] = useState<string>("2.00");
   const [gameState, setGameState] = useState<GameState>("idle");
   const [multiplier, setMultiplier] = useState<number>(1.0);
-  const [crashPoint, setCrashPoint] = useState<number>(1.0);
+  const [, setCrashPoint] = useState<number>(1.0);
   const [hasBet, setHasBet] = useState<boolean>(false);
   const [betQueued, setBetQueued] = useState<boolean>(false); // pre-queue for next round
   const [history, setHistory] = useState<number[]>([4.21, 1.0, 11.3, 1.52, 2.0, 7.8]);
