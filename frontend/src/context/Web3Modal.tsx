@@ -3,10 +3,9 @@
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react';
 import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { mainnet, sepolia } from 'wagmi/chains'; // sepolia is the testnet we will use
+import { mainnet, sepolia } from 'wagmi/chains';
 
 // 1. Get a free projectId at https://cloud.walletconnect.com
-// For now, you can leave this generic one for testing, but swap it before launch!
 const projectId = process.env.NEXT_PUBLIC_W3M_PROJECT_ID || 'b56e18d47c72ab683b108151966d6bea';
 
 // 2. Set up the metadata for when users connect
@@ -29,17 +28,19 @@ const config = defaultWagmiConfig({
 const queryClient = new QueryClient();
 
 // 5. Create the Web3Modal instance and style it to match the Vault theme
-createWeb3Modal({
-  wagmiConfig: config,
-  projectId,
-  themeMode: 'dark',
-  themeVariables: {
-    '--w3m-accent': '#fbbf24', // Crypto-gold
-    '--w3m-color-mix': '#18181b', // Tint the modal with our charcoal surface color
-    '--w3m-color-mix-strength': 40, // 40% tint strength (adjust 0-100 to your liking)
-    '--w3m-border-radius-master': '2px', // Sharper, hardware-like edges
-  }
-});
+if (typeof window !== 'undefined') {
+  createWeb3Modal({
+    wagmiConfig: config,
+    projectId,
+    themeMode: 'dark',
+    themeVariables: {
+      '--w3m-accent': '#fbbf24', // Crypto-gold
+      '--w3m-color-mix': '#18181b', // Tint the modal with our charcoal surface color
+      '--w3m-color-mix-strength': 40, // 40% tint strength (adjust 0-100 to your liking)
+      '--w3m-border-radius-master': '2px', // Sharper, hardware-like edges
+    }
+  });
+}
 
 export function Web3ModalProvider({ children }: { children: React.ReactNode }) {
   return (

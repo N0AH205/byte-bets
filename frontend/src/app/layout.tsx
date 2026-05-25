@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Web3ModalProvider } from "@/context/Web3Modal";
+import { ClientWeb3Modal } from "@/context/ClientWeb3Modal";
 import { BalanceProvider } from "@/context/BalanceContext";
 import "./globals.css";
 
@@ -16,11 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Web3ModalProvider>
+        <ClientWeb3Modal>
           <BalanceProvider>
             {children}
           </BalanceProvider>
-        </Web3ModalProvider>
+        </ClientWeb3Modal>
       </body>
     </html>
   );
