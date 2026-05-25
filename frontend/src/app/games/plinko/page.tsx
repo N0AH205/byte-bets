@@ -47,17 +47,36 @@ export default function PlinkoGame() {
   const [riskLevel, setRiskLevel] = useState<RiskLevel>("High");
   const [rows, setRows] = useState<16 | 12 | 8>(16);
   const [history, setHistory] = useState<number[]>([]);
-
+  const [scale, setScale] = useState(1);
+  
+  const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const multipliers = MULTIPLIER_TABLES[riskLevel][rows];
   const maxMult = Math.max(...multipliers);
 
-  // Refs to always read latest values inside Matter.js event callback
   const betRef = useRef(betAmount);
   const creditRef = useRef(credit);
   useEffect(() => { betRef.current = betAmount; }, [betAmount]);
   useEffect(() => { creditRef.current = credit; }, [credit]);
+
+  // Responsive scaling
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        // padding buffer
+        const availableWidth = width - 32; 
+        const availableHeight = height - 32;
+        const scaleX = availableWidth / CANVAS_WIDTH;
+        const scaleY = availableHeight / CANVAS_HEIGHT;
+        setScale(Math.min(1, scaleX, scaleY));
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   // Rebuild the physics world when rows or riskLevel changes
   useEffect(() => {
@@ -293,9 +312,17 @@ export default function PlinkoGame() {
         </div>
 
         {/* Right Side: Visual Container */}
-        <div className="flex-1 bg-[#18181b] border border-zinc-800 rounded-lg flex items-center justify-center overflow-x-auto relative">
+        <div ref={containerRef} className="flex-1 bg-[#18181b] border border-zinc-800 rounded-lg flex items-center justify-center overflow-hidden relative min-h-[500px] xl:min-h-[auto]">
 
-          <div className="relative w-[800px] h-[600px] flex-shrink-0">
+          <div 
+            className="relative flex-shrink-0"
+            style={{
+              width: `${CANVAS_WIDTH}px`,
+              height: `${CANVAS_HEIGHT}px`,
+              transform: `scale(${scale})`,
+              transformOrigin: 'center center'
+            }}
+          >
             {/* Matter.js Canvas */}
             <div ref={sceneRef} className="absolute inset-0 z-10 pointer-events-none" />
 
