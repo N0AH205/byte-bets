@@ -28,19 +28,17 @@ const config = defaultWagmiConfig({
 const queryClient = new QueryClient();
 
 // 5. Create the Web3Modal instance and style it to match the Vault theme
-if (typeof window !== 'undefined') {
-  createWeb3Modal({
-    wagmiConfig: config,
-    projectId,
-    themeMode: 'dark',
-    themeVariables: {
-      '--w3m-accent': '#fbbf24', // Crypto-gold
-      '--w3m-color-mix': '#18181b', // Tint the modal with our charcoal surface color
-      '--w3m-color-mix-strength': 40, // 40% tint strength (adjust 0-100 to your liking)
-      '--w3m-border-radius-master': '2px', // Sharper, hardware-like edges
-    }
-  });
-}
+createWeb3Modal({
+  wagmiConfig: config,
+  projectId,
+  themeMode: 'dark',
+  themeVariables: {
+    '--w3m-accent': '#fbbf24',
+    '--w3m-color-mix': '#18181b',
+    '--w3m-color-mix-strength': 40,
+    '--w3m-border-radius-master': '2px',
+  }
+});
 
 export function Web3ModalProvider({ children }: { children: React.ReactNode }) {
   return (

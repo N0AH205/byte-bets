@@ -8,16 +8,18 @@ import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useBalance } from "@/context/BalanceContext";
 
+import { Gamepad2, Dices, Coins, TrendingUp, Grid3x3, ArrowUpDown, UserPlus } from "lucide-react";
+
 const space = Space_Grotesk({ subsets: ["latin"], weight: ["400", "700"] });
 const fira = Fira_Code({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 const NAV_LINKS = [
-  { name: "All Games", href: "/games" },
-  { name: "Crypto Dice", href: "/games/dice" },
-  { name: "Plinko", href: "/games/plinko" },
-  { name: "Crash", href: "/games/crash" },
-  { name: "Mines", href: "/games/mines" },
-  { name: "Hi-Lo", href: "/games/hilo" },
+  { name: "All Games", href: "/games", icon: Gamepad2 },
+  { name: "Crypto Dice", href: "/games/dice", icon: Dices },
+  { name: "Plinko", href: "/games/plinko", icon: Coins },
+  { name: "Crash", href: "/games/crash", icon: TrendingUp },
+  { name: "Mines", href: "/games/mines", icon: Grid3x3 },
+  { name: "Hi-Lo", href: "/games/hilo", icon: ArrowUpDown },
 ];
 
 export default function GamesLayout({ children }: { children: React.ReactNode }) {
@@ -73,9 +75,22 @@ export default function GamesLayout({ children }: { children: React.ReactNode })
           </span>
         </button>
 
-        <div className={`flex items-center gap-2 text-xs text-emerald-500 font-bold tracking-widest hidden sm:flex ${fira.className}`}>
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-          CONNECTED
+        <div className="flex items-center gap-4">
+          {isConnected && (
+            <div className={`hidden sm:flex items-center bg-[#09090b] border border-zinc-800 rounded p-1 pl-4 ${fira.className}`}>
+              <div className="flex flex-col mr-4">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-widest leading-tight">Balance</span>
+                <span className="text-emerald-400 font-bold text-sm leading-tight">${balance.toFixed(2)}</span>
+              </div>
+              <button className="bg-gradient-to-b from-[#fcd34d] via-[#fbbf24] to-[#d97706] text-[#09090b] text-xs font-bold uppercase tracking-widest px-4 py-2 rounded shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] hover:brightness-110 transition-all">
+                Deposit
+              </button>
+            </div>
+          )}
+          <div className={`flex items-center gap-2 text-xs text-emerald-500 font-bold tracking-widest hidden sm:flex ${fira.className}`}>
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+            ONLINE
+          </div>
         </div>
       </header>
 
@@ -100,16 +115,18 @@ export default function GamesLayout({ children }: { children: React.ReactNode })
               <nav className="space-y-1 px-3">
                 {NAV_LINKS.map((link) => {
                   const isActive = pathname === link.href;
+                  const Icon = link.icon;
                   return (
                     <Link 
                       key={link.href} 
                       href={link.href}
-                      className={`block px-3 py-2 rounded transition-colors text-sm ${fira.className} ${
+                      className={`flex items-center gap-3 px-3 py-2 rounded transition-colors text-sm font-medium ${fira.className} ${
                         isActive 
                           ? "bg-[#fbbf24]/10 text-[#fbbf24] border-l-2 border-[#fbbf24]" 
                           : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 border-l-2 border-transparent"
                       }`}
                     >
+                      <Icon size={18} className={isActive ? "text-[#fbbf24]" : "text-zinc-500"} />
                       {link.name}
                     </Link>
                   );
@@ -122,12 +139,13 @@ export default function GamesLayout({ children }: { children: React.ReactNode })
               <nav className="space-y-1 px-3">
                 <Link 
                   href="/games/referrals"
-                  className={`block px-3 py-2 rounded transition-colors text-sm ${fira.className} ${
+                  className={`flex items-center gap-3 px-3 py-2 rounded transition-colors text-sm font-medium ${fira.className} ${
                     pathname === "/games/referrals"
                       ? "bg-[#fbbf24]/10 text-[#fbbf24] border-l-2 border-[#fbbf24]" 
                       : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 border-l-2 border-transparent"
                   }`}
                 >
+                  <UserPlus size={18} className={pathname === "/games/referrals" ? "text-[#fbbf24]" : "text-zinc-500"} />
                   Referrals
                 </Link>
               </nav>

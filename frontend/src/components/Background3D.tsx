@@ -54,7 +54,13 @@ export default function Background3D() {
         style={{ backgroundImage: 'radial-gradient(#4c1d95 1px, transparent 1px)', backgroundSize: '40px 40px' }}
       ></div>
 
-      <Canvas camera={{ position: [0, 0, 6], fov: 50 }} className="z-10">
+      <Canvas 
+        camera={{ position: [0, 0, 6], fov: 50 }} 
+        className="z-10"
+        dpr={[1, 1.5]}
+        gl={{ powerPreference: "high-performance", antialias: false }}
+        frameloop="always"
+      >
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={2} color="#fbbf24" />
         <directionalLight position={[-5, -5, -5]} intensity={3} color="#4c1d95" />

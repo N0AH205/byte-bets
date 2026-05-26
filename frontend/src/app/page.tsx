@@ -1,12 +1,17 @@
 "use client";
 
-import Background3D from "@/components/Background3D";
 import { Space_Grotesk, Fira_Code } from "next/font/google";
 import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useAccount } from 'wagmi';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+const Background3D = dynamic(() => import('@/components/Background3D'), { 
+  ssr: false,
+  loading: () => <div className="fixed top-0 left-0 w-full h-full -z-10 bg-[#09090b]" />
+});
 
 const space = Space_Grotesk({ subsets: ["latin"], weight: ["400", "700"] });
 const fira = Fira_Code({ subsets: ["latin"], weight: ["400", "500"] });

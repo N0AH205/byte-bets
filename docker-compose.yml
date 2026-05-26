@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_W3M_PROJECT_ID=b56e18d47c72ab683b108151966d6bea
+    depends_on:
+      - game-server
+    networks:
+      - byte-bets-network
+
+  game-server:
+    build:
+      context: ./game-server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DATABASE_URL=file:./dev.db
+    volumes:
+      - ./game-server/prisma:/app/prisma
+    networks:
+      - byte-bets-network
+
+networks:
+  byte-bets-network:
+    driver: bridge

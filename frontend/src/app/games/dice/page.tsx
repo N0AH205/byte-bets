@@ -50,144 +50,150 @@ export default function DiceGame() {
   };
 
   return (
-    <div className="min-h-screen p-8 md:p-12 flex flex-col items-center">
+    <div className="min-h-screen p-4 md:p-8 flex flex-col max-w-7xl mx-auto w-full">
 
       {/* Header */}
-      <div className="w-full max-w-2xl mb-8 flex justify-between items-end border-b border-zinc-800 pb-4">
+      <div className="mb-6 flex justify-between items-end border-b border-zinc-800 pb-4">
         <div>
-          <h1 className={`text-4xl font-bold text-zinc-100 uppercase ${space.className}`}>Crypto Dice</h1>
-          <p className={`text-zinc-500 text-sm mt-1 ${fira.className}`}>Set your target and execute the roll.</p>
-        </div>
-        <div className={`text-right ${fira.className}`}>
-          <div className="text-xs text-zinc-500 uppercase">Wallet Balance</div>
-          <div className="text-emerald-500 text-lg font-bold tracking-widest">
-            ${balance.toFixed(2)}
-          </div>
+          <h1 className={`text-3xl font-bold text-zinc-100 uppercase tracking-widest ${space.className}`}>Crypto Dice</h1>
         </div>
       </div>
 
-      {/* Main Game Console */}
-      <div className="w-full max-w-2xl bg-[#18181b] border border-zinc-800 rounded-lg p-8 shadow-2xl relative">
-
-        {/* Decorative corner brackets */}
-        <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-[#fbbf24] rounded-tl-lg"></div>
-        <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-[#fbbf24] rounded-tr-lg"></div>
-        <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-[#fbbf24] rounded-bl-lg"></div>
-        <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-[#fbbf24] rounded-br-lg"></div>
-
-        {/* Result Display */}
-        <div className="bg-[#09090b] border border-zinc-800 rounded p-6 mb-8 text-center relative overflow-hidden">
-          <div className={`text-sm text-zinc-500 uppercase tracking-widest mb-2 ${fira.className}`}>
-            Result Output
-          </div>
-          <div className={`text-7xl font-bold transition-colors duration-300 ${
-            isRolling
-              ? "text-zinc-700 animate-pulse"
-              : lastResult === "win"
-              ? "text-emerald-500"
-              : lastResult === "loss"
-              ? "text-red-500"
-              : "text-zinc-300"
-          } ${space.className}`}>
-            {isRolling ? "..." : lastRoll !== null ? lastRoll : "00"}
-          </div>
-
-          {/* Result banner */}
-          {!isRolling && lastResult && (
-            <div className={`mt-3 text-sm font-bold tracking-widest uppercase ${fira.className} ${
-              lastResult === "win" ? "text-emerald-400" : "text-red-400"
-            }`}>
-              {lastResult === "win"
-                ? `✓ WIN  +$${potentialWin}`
-                : `✗ LOSS  −$${Number(betAmount).toFixed(2)}`}
+      <div className="flex flex-col lg:flex-row gap-6 flex-1">
+        
+        {/* Game Stage (Right side on desktop, top on mobile) */}
+        <div className="flex-1 bg-[#09090b] border border-zinc-800 rounded-xl relative overflow-hidden min-h-[300px] lg:min-h-[500px] flex flex-col items-center justify-center shadow-inner order-1 lg:order-2">
+          
+          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, #fbbf24 0%, transparent 50%)' }}></div>
+          
+          <div className="relative z-10 text-center">
+            <div className={`text-[120px] leading-none font-bold transition-all duration-300 drop-shadow-2xl ${
+              isRolling
+                ? "text-zinc-700 animate-pulse scale-95"
+                : lastResult === "win"
+                ? "text-emerald-500 scale-110 drop-shadow-[0_0_30px_rgba(16,185,129,0.5)]"
+                : lastResult === "loss"
+                ? "text-red-500 scale-100 drop-shadow-[0_0_30px_rgba(239,68,68,0.3)]"
+                : "text-zinc-300"
+            } ${space.className}`}>
+              {isRolling ? "..." : lastRoll !== null ? lastRoll : "00"}
             </div>
-          )}
 
-          {/* Mock Hash output */}
-          <div className={`mt-4 text-[10px] text-zinc-600 break-all ${fira.className}`}>
-            HASH: {isRolling ? "generating sequence..." : "0x7a8b9c...f1e2d3c4b5a697887"}
+            {/* Result banner */}
+            <div className={`mt-8 h-12 flex items-center justify-center text-xl font-bold tracking-widest uppercase transition-all duration-300 ${fira.className} ${
+                lastResult === "win" ? "text-emerald-400 opacity-100 translate-y-0" : 
+                lastResult === "loss" ? "text-red-400 opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}>
+              {lastResult === "win" && `+ $${potentialWin}`}
+              {lastResult === "loss" && `− $${Number(betAmount).toFixed(2)}`}
+            </div>
+            
+            <div className={`mt-12 w-full max-w-md mx-auto px-8 ${fira.className}`}>
+              <div className="flex justify-between text-xs text-zinc-500 mb-2 font-bold uppercase tracking-widest">
+                <span>0</span>
+                <span className="text-[#fbbf24]">Target: {rollUnder}</span>
+                <span>100</span>
+              </div>
+              <div className="h-3 bg-zinc-800 rounded-full overflow-hidden relative">
+                <div 
+                  className="absolute top-0 left-0 h-full bg-emerald-500/80 transition-all duration-300"
+                  style={{ width: `${rollUnder}%` }}
+                ></div>
+                <div 
+                  className="absolute top-0 right-0 h-full bg-red-500/80 transition-all duration-300"
+                  style={{ width: `${100 - rollUnder}%` }}
+                ></div>
+                {lastRoll !== null && !isRolling && (
+                  <div 
+                    className="absolute top-0 h-full w-2 bg-white shadow-[0_0_10px_white] z-10 transition-all duration-500"
+                    style={{ left: `calc(${lastRoll}% - 4px)` }}
+                  ></div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Controls Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-
-          {/* Left Column: Bet Amount */}
-          <div>
-            <label className={`block text-xs text-zinc-500 uppercase tracking-widest mb-2 ${fira.className}`}>
+        {/* Control Panel (Left side on desktop, bottom on mobile) */}
+        <div className="w-full lg:w-80 bg-[#18181b] border border-zinc-800 rounded-xl p-6 shrink-0 flex flex-col order-2 lg:order-1 shadow-2xl z-10">
+          
+          {/* Bet Amount */}
+          <div className="mb-6">
+            <label className={`block text-xs text-zinc-500 font-bold uppercase tracking-widest mb-2 ${fira.className}`}>
               Bet Amount
             </label>
-            <div className="flex items-center bg-[#09090b] border border-zinc-700 rounded focus-within:border-[#fbbf24] transition-colors">
-              <span className="pl-3 text-zinc-500">$</span>
+            <div className="flex items-center bg-[#09090b] border border-zinc-700 rounded focus-within:border-[#fbbf24] transition-colors p-1">
+              <span className="pl-3 text-zinc-500 font-bold">$</span>
               <input
                 type="number"
                 value={betAmount}
                 onChange={(e) => setBetAmount(e.target.value)}
                 disabled={isRolling}
-                className={`w-full bg-transparent text-zinc-200 p-3 outline-none disabled:opacity-50 ${fira.className}`}
+                className={`w-full bg-transparent text-zinc-200 p-2 outline-none font-bold disabled:opacity-50 ${fira.className}`}
               />
-              <button
-                onClick={handleHalf}
-                disabled={isRolling}
-                className="px-3 text-xs text-zinc-500 hover:text-[#fbbf24] disabled:opacity-40 transition-colors"
-              >
-                ½
-              </button>
-              <button
-                onClick={handleDouble}
-                disabled={isRolling}
-                className="px-3 text-xs text-zinc-500 hover:text-[#fbbf24] border-l border-zinc-800 disabled:opacity-40 transition-colors"
-              >
-                2×
-              </button>
+              <div className="flex gap-1 pr-1">
+                <button
+                  onClick={handleHalf}
+                  disabled={isRolling}
+                  className="px-2 py-1 bg-zinc-800 rounded text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 disabled:opacity-40 transition-colors"
+                >
+                  ½
+                </button>
+                <button
+                  onClick={handleDouble}
+                  disabled={isRolling}
+                  className="px-2 py-1 bg-zinc-800 rounded text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 disabled:opacity-40 transition-colors"
+                >
+                  2×
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Stats */}
-          <div className={`bg-[#09090b] border border-zinc-800 rounded p-4 flex flex-col justify-center gap-1.5 ${fira.className}`}>
-            <div className="flex justify-between text-sm">
-              <span className="text-zinc-500">Multiplier</span>
-              <span className="text-[#fbbf24]">{multiplier}×</span>
+          {/* Sliders / Inputs */}
+          <div className="mb-6 bg-[#09090b] border border-zinc-800 rounded p-4">
+             <label className={`block text-xs text-zinc-500 font-bold uppercase tracking-widest mb-4 flex justify-between ${fira.className}`}>
+              <span>Roll Under</span>
+              <span className="text-[#fbbf24] text-lg">{rollUnder}</span>
+            </label>
+            <input
+              type="range"
+              min="2"
+              max="98"
+              value={rollUnder}
+              onChange={(e) => setRollUnder(Number(e.target.value))}
+              disabled={isRolling}
+              className="w-full accent-[#fbbf24] h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer disabled:opacity-50"
+            />
+          </div>
+
+          {/* Stats Grid */}
+          <div className={`grid grid-cols-2 gap-2 mb-8 ${fira.className}`}>
+            <div className="bg-[#09090b] border border-zinc-800 rounded p-3 text-center">
+              <div className="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Multiplier</div>
+              <div className="font-bold text-zinc-200">{multiplier}×</div>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-zinc-500">Win Chance</span>
-              <span className="text-[#fbbf24]">{winChance}%</span>
+            <div className="bg-[#09090b] border border-zinc-800 rounded p-3 text-center">
+              <div className="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Win Chance</div>
+              <div className="font-bold text-zinc-200">{winChance}%</div>
             </div>
-            <div className="flex justify-between text-sm border-t border-zinc-800/50 pt-1.5 mt-0.5">
-              <span className="text-zinc-500">Potential Win</span>
-              <span className="text-emerald-400">${potentialWin}</span>
+            <div className="col-span-2 bg-emerald-500/10 border border-emerald-500/20 rounded p-3 text-center flex justify-between items-center px-4 mt-2">
+              <div className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">Potential Profit</div>
+              <div className="font-bold text-emerald-400 text-lg">${potentialWin}</div>
             </div>
           </div>
+
+          <div className="mt-auto">
+            <button
+              onClick={handleRoll}
+              disabled={isRolling || Number(betAmount) <= 0 || Number(betAmount) > balance}
+              className={`w-full py-4 text-[#09090b] font-bold text-lg uppercase tracking-widest rounded bg-gradient-to-b from-[#fcd34d] via-[#fbbf24] to-[#d97706] shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),_0_4px_15px_rgba(251,191,36,0.2)] hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] border-b-4 border-[#b45309] hover:translate-y-[2px] hover:border-b-2 active:translate-y-[4px] active:border-b-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${space.className}`}
+            >
+              {isRolling ? "Rolling..." : "Bet"}
+            </button>
+          </div>
+          
         </div>
-
-        {/* Slider Section */}
-        <div className="mb-8">
-          <label className={`block text-xs text-zinc-500 uppercase tracking-widest mb-4 flex justify-between ${fira.className}`}>
-            <span>Roll Under Target</span>
-            <span className="text-[#fbbf24] text-lg">{rollUnder}</span>
-          </label>
-          <input
-            type="range"
-            min="2"
-            max="98"
-            value={rollUnder}
-            onChange={(e) => setRollUnder(Number(e.target.value))}
-            className="w-full accent-[#fbbf24] h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
-          />
-          <div className={`flex justify-between mt-2 text-xs text-zinc-600 ${fira.className}`}>
-            <span>Risky (High Payout)</span>
-            <span>Safe (High Chance)</span>
-          </div>
-        </div>
-
-        {/* Action Button */}
-        <button
-          onClick={handleRoll}
-          disabled={isRolling || Number(betAmount) <= 0 || Number(betAmount) > balance}
-          className={`w-full py-4 text-[#09090b] font-bold uppercase tracking-widest rounded bg-gradient-to-b from-[#fcd34d] via-[#fbbf24] to-[#d97706] shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),_0_4px_15px_rgba(251,191,36,0.2)] hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] border-b-4 border-[#b45309] hover:translate-y-[2px] hover:border-b-2 active:translate-y-[4px] active:border-b-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${space.className}`}
-        >
-          {isRolling ? "EXECUTING HASH..." : "ROLL DICE"}
-        </button>
 
       </div>
     </div>
